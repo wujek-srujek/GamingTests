@@ -11,7 +11,7 @@
         android:theme="@android:style/Theme.Black.NoTitleBar">
 
         <activity
-            android:name=".TestActivity"
+            android:name=".MrNomActivity"
             android:screenOrientation="portrait">
 
             <intent-filter>
