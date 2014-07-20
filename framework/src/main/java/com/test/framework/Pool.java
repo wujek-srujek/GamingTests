@@ -1,4 +1,4 @@
-package com.test.mrnom.framework;
+package com.test.framework;
 
 
 import java.lang.reflect.Array;

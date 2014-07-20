@@ -7,9 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.test.mrnom.framework.game.Game;
-import com.test.mrnom.framework.game.GameScreen;
-import com.test.mrnom.framework.input.TouchEvent;
+import com.test.framework.game.Game;
+import com.test.framework.game.GameScreen;
+import com.test.framework.input.TouchEvent;
 
 import java.util.List;
 

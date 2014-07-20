@@ -1,4 +1,7 @@
-package com.test.mrnom.framework.input;
+package com.test.framework.input;
+
+
+import java.util.Locale;
 
 
 public class TouchEvent {
@@ -17,6 +20,6 @@ public class TouchEvent {
 
     @Override
     public String toString() {
-        return String.format("type: %s, pointer: %d, x: %.2f, y: %.2f", type, pointer, x, y);
+        return String.format(Locale.US, "type: %s, pointer: %d, x: %.2f, y: %.2f", type, pointer, x, y);
     }
 }

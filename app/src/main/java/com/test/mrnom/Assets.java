@@ -3,7 +3,7 @@ package com.test.mrnom;
 
 import android.graphics.Bitmap;
 
-import com.test.mrnom.framework.sfx.Sound;
+import com.test.framework.sfx.Sound;
 
 
 public class Assets {

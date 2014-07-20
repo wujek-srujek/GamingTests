@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.game;
+package com.test.framework.game;
 
 
 import android.app.Activity;
@@ -15,10 +15,10 @@ import android.view.SurfaceHolder;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.test.mrnom.framework.gfx.Graphics;
-import com.test.mrnom.framework.input.Input;
-import com.test.mrnom.framework.io.FileIO;
-import com.test.mrnom.framework.sfx.Audio;
+import com.test.framework.gfx.Graphics;
+import com.test.framework.input.Input;
+import com.test.framework.io.FileIO;
+import com.test.framework.sfx.Audio;
 
 import java.io.File;
 import java.util.List;

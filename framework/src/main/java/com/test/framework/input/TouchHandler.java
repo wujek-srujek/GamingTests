@@ -1,10 +1,10 @@
-package com.test.mrnom.framework.input;
+package com.test.framework.input;
 
 
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.test.mrnom.framework.Pool;
+import com.test.framework.Pool;
 
 import java.util.ArrayList;
 import java.util.List;

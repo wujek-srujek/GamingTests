@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.io;
+package com.test.framework.io;
 
 
 import android.content.res.AssetManager;

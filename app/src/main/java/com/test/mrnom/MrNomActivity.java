@@ -3,9 +3,9 @@ package com.test.mrnom;
 
 import android.graphics.Canvas;
 
-import com.test.mrnom.framework.game.Game;
-import com.test.mrnom.framework.game.GameActivity;
-import com.test.mrnom.framework.game.GameScreen;
+import com.test.framework.game.Game;
+import com.test.framework.game.GameActivity;
+import com.test.framework.game.GameScreen;
 
 
 public class MrNomActivity extends GameActivity {

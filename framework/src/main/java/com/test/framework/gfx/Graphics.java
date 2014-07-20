@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.gfx;
+package com.test.framework.gfx;
 
 
 import android.content.res.AssetManager;

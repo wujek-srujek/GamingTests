@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.input;
+package com.test.framework.input;
 
 
 import android.view.KeyEvent;

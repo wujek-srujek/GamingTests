@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.sfx;
+package com.test.framework.sfx;
 
 
 import android.media.SoundPool;

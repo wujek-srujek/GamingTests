@@ -1,10 +1,10 @@
-package com.test.mrnom.framework.game;
+package com.test.framework.game;
 
 
-import com.test.mrnom.framework.gfx.Graphics;
-import com.test.mrnom.framework.input.Input;
-import com.test.mrnom.framework.io.FileIO;
-import com.test.mrnom.framework.sfx.Audio;
+import com.test.framework.gfx.Graphics;
+import com.test.framework.input.Input;
+import com.test.framework.io.FileIO;
+import com.test.framework.sfx.Audio;
 
 
 public interface Game {

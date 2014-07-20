@@ -4,9 +4,9 @@ package com.test.mrnom;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.test.mrnom.framework.game.Game;
-import com.test.mrnom.framework.game.GameScreen;
-import com.test.mrnom.framework.gfx.Graphics;
+import com.test.framework.game.Game;
+import com.test.framework.game.GameScreen;
+import com.test.framework.gfx.Graphics;
 
 
 public class LoadingScreen extends GameScreen {
@@ -49,7 +49,7 @@ public class LoadingScreen extends GameScreen {
             Settings.load(game.getFileIO());
         }
 
-        if (Assets.bitten!= null) {
+        if (Assets.bitten != null) {
             game.switchToScreen(new MainScreen(game, canvas));
         }
     }

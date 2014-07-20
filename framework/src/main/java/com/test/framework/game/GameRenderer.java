@@ -1,4 +1,4 @@
-package com.test.mrnom.framework.game;
+package com.test.framework.game;
 
 
 import android.annotation.SuppressLint;

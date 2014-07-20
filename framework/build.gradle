@@ -1,11 +1,11 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 20
-    buildToolsVersion '20.0.0'
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.test.mrnom"
+        applicationId "com.test.framework"
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1
@@ -20,7 +20,5 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':framework')
-    compile group: 'com.google.guava', name: 'guava', version: '17.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

@@ -4,10 +4,10 @@ package com.test.mrnom;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import com.test.mrnom.framework.game.Game;
-import com.test.mrnom.framework.game.GameScreen;
-import com.test.mrnom.framework.gfx.Graphics;
-import com.test.mrnom.framework.input.TouchEvent;
+import com.test.framework.game.Game;
+import com.test.framework.game.GameScreen;
+import com.test.framework.gfx.Graphics;
+import com.test.framework.input.TouchEvent;
 
 import java.util.List;
 
