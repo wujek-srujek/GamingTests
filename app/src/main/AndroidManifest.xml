@@ -7,12 +7,24 @@
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Gaming tests"
         android:theme="@android:style/Theme.Black.NoTitleBar">
 
         <activity
             android:name=".MrNomActivity"
+            android:icon="@drawable/mrnom"
+            android:label="MrNom"
             android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.test.TestActivity"
+            android:label="TouchTests">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
