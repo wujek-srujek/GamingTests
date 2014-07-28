@@ -2,6 +2,7 @@ package com.test.framework.game;
 
 
 import android.graphics.Canvas;
+import android.os.Bundle;
 
 
 public abstract class GameScreen {
@@ -30,4 +31,12 @@ public abstract class GameScreen {
     protected abstract void update(float deltaTime);
 
     protected abstract void render(float deltaTime);
+
+    public void saveState(Bundle state) {
+        // nothing by defaut
+    }
+
+    public void loadState(Bundle state) {
+        // nothing by default
+    }
 }

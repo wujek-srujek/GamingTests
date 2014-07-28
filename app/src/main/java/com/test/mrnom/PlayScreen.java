@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Bundle;
 
 import com.test.framework.game.Game;
 import com.test.framework.game.GameScreen;
@@ -24,7 +25,7 @@ public class PlayScreen extends GameScreen {
 
     private final World world;
 
-    private int oldScore = 0;
+    private int oldScore;
 
     private final int[] scoreDigits;
 
@@ -94,6 +95,15 @@ public class PlayScreen extends GameScreen {
                 drawGameOver();
                 break;
         }
+    }
+
+    @Override
+    public void saveState(Bundle state) {
+    }
+
+    @Override
+    public void loadState(Bundle state) {
+        this.state = State.PAUSED;
     }
 
     private void updateReady(boolean touched) {

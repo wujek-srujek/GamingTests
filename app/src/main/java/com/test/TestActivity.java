@@ -4,6 +4,7 @@ package com.test;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 
 import com.test.framework.game.Game;
 import com.test.framework.game.GameActivity;

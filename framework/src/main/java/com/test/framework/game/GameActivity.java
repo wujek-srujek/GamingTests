@@ -128,12 +128,20 @@ public abstract class GameActivity extends Activity implements Game {
 
         setContentView(gameRenderer);
 
-        screen = getFirstScreen(this, new Canvas(frameBuffer));
+        Canvas canvas = new Canvas(frameBuffer);
+        if (savedInstanceState != null) {
+            screen = loadScreen(savedInstanceState, canvas);
+        }
+        if (screen == null) {
+            screen = getFirstScreen(this, canvas);
+        }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        saveScreen(screen, outState);
     }
 
     @Override
@@ -177,6 +185,15 @@ public abstract class GameActivity extends Activity implements Game {
     }
 
     protected abstract GameScreen getFirstScreen(Game game, Canvas canvas);
+
+    protected void saveScreen(GameScreen scree, Bundle state) {
+        // nothing by default
+    }
+
+    // may return null (the default), in which case #getFirstScreen is called
+    protected GameScreen loadScreen(Bundle state, Canvas canvas) {
+        return null;
+    }
 
     protected Bitmap.Config getBitmapConfig() {
         return Bitmap.Config.RGB_565;
