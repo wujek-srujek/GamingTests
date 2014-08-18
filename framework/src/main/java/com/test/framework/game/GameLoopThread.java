@@ -1,6 +1,10 @@
 package com.test.framework.game;
 
 
+import android.os.SystemClock;
+import android.util.Log;
+
+
 public class GameLoopThread extends Thread {
 
     private final Game game;
@@ -24,10 +28,10 @@ public class GameLoopThread extends Thread {
 
     @Override
     public void run() {
-        long startTime = System.nanoTime();
+        long startTime = SystemClock.uptimeMillis();
         while (running) {
-            float deltaTime = (System.nanoTime() - startTime) / 1000000000.0f;
-            startTime = System.nanoTime();
+            float deltaTime = (SystemClock.uptimeMillis() - startTime) / 1000.0f;
+            startTime = SystemClock.uptimeMillis();
             game.update(deltaTime);
             game.render(deltaTime);
         }

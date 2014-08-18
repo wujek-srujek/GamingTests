@@ -55,7 +55,7 @@ public abstract class GameActivity extends Activity implements Game {
         final int virtualHeight = getVirtualHeight();
         Bitmap frameBuffer = Bitmap.createBitmap(virtualWidth, virtualHeight, getBitmapConfig());
 
-        gameRenderer = new GameRenderer(this, frameBuffer);
+        gameRenderer = new GameRenderer(this, frameBuffer, showFps());
         gameRenderer.getHolder().addCallback(new SurfaceHolder.Callback2() {
 
             private boolean creation;
@@ -205,6 +205,10 @@ public abstract class GameActivity extends Activity implements Game {
 
     protected int getVirtualHeight() {
         return 480;
+    }
+
+    protected boolean showFps() {
+        return true;
     }
 
     protected int getMaxSimultaneousSounds() {
