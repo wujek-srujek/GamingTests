@@ -2,7 +2,6 @@ package com.test.framework.game;
 
 
 import android.os.SystemClock;
-import android.util.Log;
 
 
 public class GameLoopThread extends Thread {

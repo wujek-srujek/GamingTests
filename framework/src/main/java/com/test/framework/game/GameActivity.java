@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
@@ -51,11 +52,16 @@ public abstract class GameActivity extends Activity implements Game {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final int virtualWidth = getVirtualWidth();
-        final int virtualHeight = getVirtualHeight();
+        int virtualWidth = getVirtualWidth();
+        int virtualHeight = getVirtualHeight();
+
         Bitmap frameBuffer = Bitmap.createBitmap(virtualWidth, virtualHeight, getBitmapConfig());
 
-        gameRenderer = new GameRenderer(this, frameBuffer, showFps());
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+
+        gameRenderer = new GameRenderer(this, frameBuffer, virtualWidth, virtualHeight, showFps());
+        gameRenderer.getHolder().setFixedSize(virtualWidth, virtualHeight);
         gameRenderer.getHolder().addCallback(new SurfaceHolder.Callback2() {
 
             private boolean creation;
@@ -67,8 +73,6 @@ public abstract class GameActivity extends Activity implements Game {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                gameRenderer.sizeChanged(width, height);
-                input.setScale((float) virtualWidth / width, (float) virtualHeight / height);
                 screen.resume();
                 if (creation) {
                     gameThread = new GameLoopThread(GameActivity.this);
@@ -101,7 +105,7 @@ public abstract class GameActivity extends Activity implements Game {
             }
         });
 
-        input = new Input();
+        input = new Input((float) virtualWidth / screenSize.x, (float) virtualHeight / screenSize.y);
         gameRenderer.setOnKeyListener(input);
         gameRenderer.setOnTouchListener(input);
         SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

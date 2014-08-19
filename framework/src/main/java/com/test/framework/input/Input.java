@@ -21,9 +21,9 @@ public class Input implements View.OnKeyListener, View.OnTouchListener, SensorEv
 
     private final AccelerometerHandler accelerometerHandler;
 
-    public Input() {
+    public Input(float scaleX, float scaleY) {
         keyHandler = new KeyHandler();
-        touchHandler = new TouchHandler(MAX_TOUCHES, 1.F, 1.F);
+        touchHandler = new TouchHandler(MAX_TOUCHES, scaleX, scaleY);
         accelerometerHandler = new AccelerometerHandler();
     }
 
@@ -93,10 +93,5 @@ public class Input implements View.OnKeyListener, View.OnTouchListener, SensorEv
 
     public float getAccelerationZ() {
         return accelerometerHandler.accelerationZ;
-    }
-
-    public void setScale(float scaleX, float scaleY) {
-        // just replace the handler, all of its info is invalid anyways
-        touchHandler = new TouchHandler(MAX_TOUCHES, scaleX, scaleY);
     }
 }

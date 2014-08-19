@@ -17,7 +17,7 @@ public class GameRenderer extends SurfaceView {
 
     private final Bitmap frameBuffer;
 
-    private final Rect canvasBounds;
+    private final int width;
 
     private final FpsInfo fpsInfo;
 
@@ -25,13 +25,14 @@ public class GameRenderer extends SurfaceView {
 
     private final Rect fpsBounds;
 
-    public GameRenderer(Context context, Bitmap frameBuffer, boolean showFps) {
+    public GameRenderer(Context context, Bitmap frameBuffer, int width, int height, boolean showFps) {
         super(context);
         this.frameBuffer = frameBuffer;
-        canvasBounds = new Rect();
+        this.width = width;
         if (showFps) {
             fpsInfo = new FpsInfo();
-            paint = new Paint();
+            paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setTextSize(height / 20);
             paint.setStyle(Paint.Style.FILL);
             paint.setTypeface(Typeface.MONOSPACE);
             fpsBounds = new Rect();
@@ -42,21 +43,12 @@ public class GameRenderer extends SurfaceView {
         }
     }
 
-    public void sizeChanged(int width, int height) {
-        canvasBounds.right = width;
-        canvasBounds.bottom = height;
-        if (fpsInfo != null) {
-            paint.setTextSize(height / 20);
-            fpsInfo.reset();
-        }
-    }
-
     public void render() {
         Canvas canvas = null;
         try {
             canvas = getHolder().lockCanvas();
             if (canvas != null) {
-                canvas.drawBitmap(frameBuffer, null, canvasBounds, null);
+                canvas.drawBitmap(frameBuffer, 0, 0, null);
                 if (fpsInfo != null) {
                     fpsInfo.update();
                     showFps(canvas, fpsInfo.getFpsChars());
@@ -73,11 +65,11 @@ public class GameRenderer extends SurfaceView {
         paint.getTextBounds(fpsChars, 0, fpsChars.length, fpsBounds);
         int width = fpsBounds.width();
         int height = fpsBounds.height();
-        int textX = canvasBounds.right - width - fpsBounds.left;
+        int textX = this.width - width - fpsBounds.left;
         int textY = -fpsBounds.top;
         fpsBounds.top = 0;
         fpsBounds.bottom = height;
-        fpsBounds.right = canvasBounds.right;
+        fpsBounds.right = this.width;
         fpsBounds.left = fpsBounds.right - width;
         paint.setColor(Color.BLACK);
         canvas.drawRect(fpsBounds, paint);
