@@ -32,7 +32,7 @@ public class GameRenderer extends SurfaceView {
         if (showFps) {
             fpsInfo = new FpsInfo();
             paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setTextSize(height / 20);
+            paint.setTextSize(height / 50);
             paint.setStyle(Paint.Style.FILL);
             paint.setTypeface(Typeface.MONOSPACE);
             fpsBounds = new Rect();

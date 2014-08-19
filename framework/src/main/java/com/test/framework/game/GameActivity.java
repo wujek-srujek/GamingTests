@@ -30,6 +30,8 @@ public abstract class GameActivity extends Activity implements Game {
 
     private static final String TAG = GameActivity.class.getName();
 
+    private Point screenSize;
+
     private GameRenderer gameRenderer;
 
     private Input input;
@@ -52,13 +54,13 @@ public abstract class GameActivity extends Activity implements Game {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+
         int virtualWidth = getVirtualWidth();
         int virtualHeight = getVirtualHeight();
 
         Bitmap frameBuffer = Bitmap.createBitmap(virtualWidth, virtualHeight, getBitmapConfig());
-
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
 
         gameRenderer = new GameRenderer(this, frameBuffer, virtualWidth, virtualHeight, showFps());
         gameRenderer.getHolder().setFixedSize(virtualWidth, virtualHeight);
@@ -204,11 +206,11 @@ public abstract class GameActivity extends Activity implements Game {
     }
 
     protected int getVirtualWidth() {
-        return 320;
+        return screenSize.x;
     }
 
     protected int getVirtualHeight() {
-        return 480;
+        return screenSize.y;
     }
 
     protected boolean showFps() {

@@ -4,7 +4,7 @@ package com.test;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Bundle;
+import android.graphics.Typeface;
 
 import com.test.framework.game.Game;
 import com.test.framework.game.GameActivity;
@@ -16,11 +16,12 @@ public class TestActivity extends GameActivity {
 
     @Override
     protected GameScreen getFirstScreen(Game game, Canvas canvas) {
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(game.getGraphics().getHeight() / 50);
+        paint.setTypeface(Typeface.MONOSPACE);
         return new GameScreen(game, canvas) {
 
             private final String[] touches = new String[game.getInput().getMaxTouches()];
-
-            private final Paint paint = new Paint();
 
             @Override
             public void update(float deltaTime) {
@@ -40,5 +41,15 @@ public class TestActivity extends GameActivity {
                 }
             }
         };
+    }
+
+    @Override
+    protected int getVirtualWidth() {
+        return super.getVirtualWidth() / 2;
+    }
+
+    @Override
+    protected int getVirtualHeight() {
+        return super.getVirtualHeight() / 2;
     }
 }

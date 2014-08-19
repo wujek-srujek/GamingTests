@@ -41,4 +41,14 @@ public class MrNomActivity extends GameActivity {
         screen.loadState(state);
         return screen;
     }
+
+    @Override
+    protected int getVirtualWidth() {
+        return 320;
+    }
+
+    @Override
+    protected int getVirtualHeight() {
+        return 480;
+    }
 }
