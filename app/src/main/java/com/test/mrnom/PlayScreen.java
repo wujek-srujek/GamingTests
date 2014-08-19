@@ -37,8 +37,8 @@ public class PlayScreen extends GameScreen {
 
     private boolean active;
 
-    protected PlayScreen(Game game, Canvas canvas) {
-        super(game, canvas);
+    protected PlayScreen(Game game) {
+        super(game);
         world = new World();
         scoreDigits = new int[6];
         srcRect = new Rect();
@@ -72,27 +72,27 @@ public class PlayScreen extends GameScreen {
     }
 
     @Override
-    protected void render(float deltaTime) {
+    protected void render(Canvas canvas, float deltaTime) {
         canvas.drawBitmap(Assets.background, 0F, 0F, null);
-        drawWorld();
+        drawWorld(canvas);
         canvas.drawLine(0, 416, 480, 416, paint);
-        drawScore();
+        drawScore(canvas);
 
         switch (state) {
             case READY:
-                drawReady();
+                drawReady(canvas);
                 break;
 
             case RUNNING:
-                drawRunning();
+                drawRunning(canvas);
                 break;
 
             case PAUSED:
-                drawPaused();
+                drawPaused(canvas);
                 break;
 
             case GAME_OVER:
-                drawGameOver();
+                drawGameOver(canvas);
                 break;
         }
     }
@@ -204,7 +204,7 @@ public class PlayScreen extends GameScreen {
                         if (Settings.soundEnabled) {
                             Assets.click.play(1);
                         }
-                        game.switchToScreen(new MainScreen(game, canvas));
+                        game.switchToScreen(new MainScreen(game));
                         return;
                     }
                 }
@@ -221,7 +221,7 @@ public class PlayScreen extends GameScreen {
                     if (Settings.soundEnabled) {
                         Assets.click.play(1);
                     }
-                    game.switchToScreen(new MainScreen(game, canvas));
+                    game.switchToScreen(new MainScreen(game));
                     return;
                 }
             }
@@ -237,7 +237,7 @@ public class PlayScreen extends GameScreen {
         oldScore = score;
     }
 
-    private void drawWorld() {
+    private void drawWorld(Canvas canvas) {
         Snake snake = world.snake;
         SnakePart head = snake.parts.get(0);
         Food food = world.food;
@@ -296,28 +296,28 @@ public class PlayScreen extends GameScreen {
         canvas.drawBitmap(headBitmap, x - 5, y - 5, null);
     }
 
-    private void drawReady() {
+    private void drawReady(Canvas canvas) {
         canvas.drawBitmap(Assets.ready, 47, 100, null);
     }
 
-    private void drawRunning() {
+    private void drawRunning(Canvas canvas) {
         prepareRect(srcRect, 64, 128, 64, 64);
         prepareRect(dstRect, 0, 416, 64, 64);
         canvas.drawBitmap(Assets.buttons, srcRect, dstRect, null);
     }
 
-    private void drawPaused() {
+    private void drawPaused(Canvas canvas) {
         canvas.drawBitmap(Assets.pause, 80, 100, null);
     }
 
-    private void drawGameOver() {
+    private void drawGameOver(Canvas canvas) {
         canvas.drawBitmap(Assets.gameOver, 62, 100, null);
         prepareRect(srcRect, 0, 128, 64, 64);
         prepareRect(dstRect, 128, 200, 64, 64);
         canvas.drawBitmap(Assets.buttons, srcRect, dstRect, null);
     }
 
-    private void drawScore() {
+    private void drawScore(Canvas canvas) {
         int index = 0;
         while (scoreDigits[index] == 0 && index < scoreDigits.length - 1) {
             ++index;

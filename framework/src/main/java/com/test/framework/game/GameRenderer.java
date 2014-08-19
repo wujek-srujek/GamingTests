@@ -1,21 +1,21 @@
 package com.test.framework.game;
 
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.view.SurfaceView;
 
 
-@SuppressLint("ViewConstructor")
-public class GameRenderer extends SurfaceView {
+public class GameRenderer {
 
-    private final Bitmap frameBuffer;
+    public interface FrameRenderer {
+
+        void renderFrame(Canvas canvas, float deltaTime);
+    }
+
+    private final FrameRenderer frameRenderer;
 
     private final int width;
 
@@ -25,9 +25,8 @@ public class GameRenderer extends SurfaceView {
 
     private final Rect fpsBounds;
 
-    public GameRenderer(Context context, Bitmap frameBuffer, int width, int height, boolean showFps) {
-        super(context);
-        this.frameBuffer = frameBuffer;
+    public GameRenderer(FrameRenderer frameRenderer, int width, int height, boolean showFps) {
+        this.frameRenderer = frameRenderer;
         this.width = width;
         if (showFps) {
             fpsInfo = new FpsInfo();
@@ -43,21 +42,11 @@ public class GameRenderer extends SurfaceView {
         }
     }
 
-    public void render() {
-        Canvas canvas = null;
-        try {
-            canvas = getHolder().lockCanvas();
-            if (canvas != null) {
-                canvas.drawBitmap(frameBuffer, 0, 0, null);
-                if (fpsInfo != null) {
-                    fpsInfo.update();
-                    showFps(canvas, fpsInfo.getFpsChars());
-                }
-            }
-        } finally {
-            if (canvas != null) {
-                getHolder().unlockCanvasAndPost(canvas);
-            }
+    public void render(Canvas canvas, float deltaTime) {
+        frameRenderer.renderFrame(canvas, deltaTime);
+        if (fpsInfo != null) {
+            fpsInfo.update();
+            showFps(canvas, fpsInfo.getFpsChars());
         }
     }
 

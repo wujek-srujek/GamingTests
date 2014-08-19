@@ -3,7 +3,6 @@ package com.test.framework.game;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -13,6 +12,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -26,11 +26,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 
-public abstract class GameActivity extends Activity implements Game {
+public abstract class GameActivity extends Activity implements Game, GameRenderer.FrameRenderer {
 
     private static final String TAG = GameActivity.class.getName();
 
     private Point screenSize;
+
+    private SurfaceView view;
 
     private GameRenderer gameRenderer;
 
@@ -60,11 +62,10 @@ public abstract class GameActivity extends Activity implements Game {
         int virtualWidth = getVirtualWidth();
         int virtualHeight = getVirtualHeight();
 
-        Bitmap frameBuffer = Bitmap.createBitmap(virtualWidth, virtualHeight, getBitmapConfig());
-
-        gameRenderer = new GameRenderer(this, frameBuffer, virtualWidth, virtualHeight, showFps());
-        gameRenderer.getHolder().setFixedSize(virtualWidth, virtualHeight);
-        gameRenderer.getHolder().addCallback(new SurfaceHolder.Callback2() {
+        view = new SurfaceView(this);
+        setContentView(view);
+        view.getHolder().setFixedSize(virtualWidth, virtualHeight);
+        view.getHolder().addCallback(new SurfaceHolder.Callback2() {
 
             private boolean creation;
 
@@ -103,13 +104,15 @@ public abstract class GameActivity extends Activity implements Game {
 
             @Override
             public void surfaceRedrawNeeded(SurfaceHolder holder) {
-                gameRenderer.render();
+                render(0F);
             }
         });
 
+        gameRenderer = new GameRenderer(this, virtualWidth, virtualHeight, showFps());
+
         input = new Input((float) virtualWidth / screenSize.x, (float) virtualHeight / screenSize.y);
-        gameRenderer.setOnKeyListener(input);
-        gameRenderer.setOnTouchListener(input);
+        view.setOnKeyListener(input);
+        view.setOnTouchListener(input);
         SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> accelerometers = manager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         if (!accelerometers.isEmpty()) {
@@ -132,14 +135,11 @@ public abstract class GameActivity extends Activity implements Game {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         audio = new Audio(getAssets(), new SoundPool(getMaxSimultaneousSounds(), AudioManager.STREAM_MUSIC, 0));
 
-        setContentView(gameRenderer);
-
-        Canvas canvas = new Canvas(frameBuffer);
         if (savedInstanceState != null) {
-            screen = loadScreen(savedInstanceState, canvas);
+            screen = loadScreen(savedInstanceState);
         }
         if (screen == null) {
-            screen = getFirstScreen(this, canvas);
+            screen = getFirstScreen(this);
         }
     }
 
@@ -177,8 +177,17 @@ public abstract class GameActivity extends Activity implements Game {
 
     @Override
     public void render(float deltaTime) {
-        screen.render(deltaTime);
-        gameRenderer.render();
+        Canvas canvas = null;
+        try {
+            canvas = view.getHolder().lockCanvas();
+            if (canvas != null) {
+                gameRenderer.render(canvas, deltaTime);
+            }
+        } finally {
+            if (canvas != null) {
+                view.getHolder().unlockCanvasAndPost(canvas);
+            }
+        }
     }
 
     @Override
@@ -190,19 +199,20 @@ public abstract class GameActivity extends Activity implements Game {
         this.screen.resume();
     }
 
-    protected abstract GameScreen getFirstScreen(Game game, Canvas canvas);
+    @Override
+    public void renderFrame(Canvas canvas, float deltaTime) {
+        screen.render(canvas, deltaTime);
+    }
 
-    protected void saveScreen(GameScreen scree, Bundle state) {
+    protected abstract GameScreen getFirstScreen(Game game);
+
+    protected void saveScreen(GameScreen screen, Bundle state) {
         // nothing by default
     }
 
     // may return null (the default), in which case #getFirstScreen is called
-    protected GameScreen loadScreen(Bundle state, Canvas canvas) {
+    protected GameScreen loadScreen(Bundle state) {
         return null;
-    }
-
-    protected Bitmap.Config getBitmapConfig() {
-        return Bitmap.Config.RGB_565;
     }
 
     protected int getVirtualWidth() {

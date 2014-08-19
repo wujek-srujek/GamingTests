@@ -15,11 +15,11 @@ import com.test.framework.input.Input;
 public class TestActivity extends GameActivity {
 
     @Override
-    protected GameScreen getFirstScreen(Game game, Canvas canvas) {
+    protected GameScreen getFirstScreen(Game game) {
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(game.getGraphics().getHeight() / 50);
         paint.setTypeface(Typeface.MONOSPACE);
-        return new GameScreen(game, canvas) {
+        return new GameScreen(game) {
 
             private final String[] touches = new String[game.getInput().getMaxTouches()];
 
@@ -33,7 +33,7 @@ public class TestActivity extends GameActivity {
             }
 
             @Override
-            public void render(float deltaTime) {
+            public void render(Canvas canvas, float deltaTime) {
                 canvas.drawRGB(0, 0, 0);
                 paint.setColor(Color.WHITE);
                 for (int i = 0; i < touches.length; ++i) {

@@ -9,11 +9,8 @@ public abstract class GameScreen {
 
     protected final Game game;
 
-    protected final Canvas canvas;
-
-    protected GameScreen(Game game, Canvas canvas) {
+    protected GameScreen(Game game) {
         this.game = game;
-        this.canvas = canvas;
     }
 
     protected void dispose() {
@@ -30,7 +27,7 @@ public abstract class GameScreen {
 
     protected abstract void update(float deltaTime);
 
-    protected abstract void render(float deltaTime);
+    protected abstract void render(Canvas canvas, float deltaTime);
 
     public void saveState(Bundle state) {
         // nothing by defaut

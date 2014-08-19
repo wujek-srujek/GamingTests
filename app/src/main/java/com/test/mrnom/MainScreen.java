@@ -22,8 +22,8 @@ public class MainScreen extends GameScreen {
 
     private final Rect musicButtonDstRect;
 
-    protected MainScreen(Game game, Canvas canvas) {
-        super(game, canvas);
+    protected MainScreen(Game game) {
+        super(game);
         playButtonSrcRect = new Rect(0, 0, 192, 42);
         playButtonDstRect = new Rect(64, 260, 256, 302);
         musicButtonSrcRect = new Rect(0, 0, 64, 64);
@@ -55,7 +55,7 @@ public class MainScreen extends GameScreen {
                     if (Settings.soundEnabled) {
                         Assets.click.play(1F);
                     }
-                    game.switchToScreen(new PlayScreen(game, canvas));
+                    game.switchToScreen(new PlayScreen(game));
                     return;
                 }
             }
@@ -71,7 +71,7 @@ public class MainScreen extends GameScreen {
     }
 
     @Override
-    protected void render(float deltaTime) {
+    protected void render(Canvas canvas, float deltaTime) {
         canvas.drawBitmap(Assets.background, 0, 0, null);
         canvas.drawBitmap(Assets.logo, 32, 20, null);
         canvas.drawBitmap(Assets.mainMenu, playButtonSrcRect, playButtonDstRect, null);

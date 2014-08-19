@@ -11,8 +11,8 @@ import com.test.framework.gfx.Graphics;
 
 public class LoadingScreen extends GameScreen {
 
-    protected LoadingScreen(Game game, Canvas canvas) {
-        super(game, canvas);
+    protected LoadingScreen(Game game) {
+        super(game);
     }
 
     @Override
@@ -50,12 +50,12 @@ public class LoadingScreen extends GameScreen {
         }
 
         if (Assets.bitten != null) {
-            game.switchToScreen(new MainScreen(game, canvas));
+            game.switchToScreen(new MainScreen(game));
         }
     }
 
     @Override
-    protected void render(float deltaTime) {
+    protected void render(Canvas canvas, float deltaTime) {
         if (Assets.background != null) {
             canvas.drawBitmap(Assets.background, 0F, 0F, null);
         }

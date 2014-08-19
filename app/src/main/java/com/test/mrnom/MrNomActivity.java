@@ -1,7 +1,6 @@
 package com.test.mrnom;
 
 
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,8 +16,8 @@ public class MrNomActivity extends GameActivity {
     private final static String TAG = MrNomActivity.class.getName();
 
     @Override
-    protected GameScreen getFirstScreen(Game game, Canvas canvas) {
-        return new LoadingScreen(game, canvas);
+    protected GameScreen getFirstScreen(Game game) {
+        return new LoadingScreen(game);
     }
 
     @Override
@@ -27,13 +26,13 @@ public class MrNomActivity extends GameActivity {
     }
 
     @Override
-    protected GameScreen loadScreen(Bundle state, Canvas canvas) {
+    protected GameScreen loadScreen(Bundle state) {
         @SuppressWarnings("unchecked")
         Class<? extends GameScreen> screenClass = (Class<? extends GameScreen>) state.getSerializable("screen");
         GameScreen screen;
         try {
-            Constructor<? extends GameScreen> ctor = screenClass.getDeclaredConstructor(Game.class, Canvas.class);
-            screen = ctor.newInstance(this, canvas);
+            Constructor<? extends GameScreen> ctor = screenClass.getDeclaredConstructor(Game.class);
+            screen = ctor.newInstance(this);
         } catch (Exception exc) {
             Log.w(TAG, "cannot load screen, game will be restarted", exc);
             return null;
