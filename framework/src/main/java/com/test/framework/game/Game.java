@@ -1,15 +1,13 @@
 package com.test.framework.game;
 
 
-import android.graphics.Canvas;
-
 import com.test.framework.gfx.Graphics;
 import com.test.framework.input.Input;
 import com.test.framework.io.FileIO;
 import com.test.framework.sfx.Audio;
 
 
-public interface Game {
+public interface Game<R> {
 
     Input getInput();
 
@@ -20,9 +18,9 @@ public interface Game {
     Audio getAudio();
 
     // the new screen must be ready to be drawn
-    void switchToScreen(GameScreen screen);
+    void switchToScreen(GameScreen<R> screen);
 
     void update(float deltaTime);
 
-    void render(Canvas canvas, float deltaTime);
+    void render(R renderer, float deltaTime);
 }

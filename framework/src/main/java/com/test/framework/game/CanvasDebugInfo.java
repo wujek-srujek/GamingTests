@@ -8,19 +8,15 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 
 
-public class DebugRenderer {
-
-    private final int width;
-
-    private final FpsInfo fpsInfo;
+public class CanvasDebugInfo extends DebugInfo<Canvas> {
 
     private final Paint paint;
 
     private final Rect fpsBounds;
 
-    public DebugRenderer(int width, int height) {
-        this.width = width;
-        fpsInfo = new FpsInfo();
+    public CanvasDebugInfo(int width, int height) {
+        super(width, height);
+
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize((float) height / 50);
         paint.setStyle(Paint.Style.FILL);
@@ -28,9 +24,8 @@ public class DebugRenderer {
         fpsBounds = new Rect();
     }
 
-    public void render(Canvas canvas) {
-        fpsInfo.update();
-        char[] fpsChars = fpsInfo.getFpsChars();
+    @Override
+    protected void render(Canvas canvas, char[] fpsChars) {
         paint.getTextBounds(fpsChars, 0, fpsChars.length, fpsBounds);
         int width = fpsBounds.width();
         int height = fpsBounds.height();

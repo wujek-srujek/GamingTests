@@ -12,7 +12,7 @@ import com.test.framework.input.TouchEvent;
 import java.util.List;
 
 
-public class MainScreen extends GameScreen {
+public class MainScreen extends GameScreen<Canvas> {
 
     private final Rect playButtonSrcRect;
 
@@ -22,7 +22,7 @@ public class MainScreen extends GameScreen {
 
     private final Rect musicButtonDstRect;
 
-    protected MainScreen(Game game) {
+    protected MainScreen(Game<Canvas> game) {
         super(game);
         playButtonSrcRect = new Rect(0, 0, 192, 42);
         playButtonDstRect = new Rect(64, 260, 256, 302);

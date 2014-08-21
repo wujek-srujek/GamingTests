@@ -3,7 +3,6 @@ package com.test.framework.game;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -11,8 +10,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -26,13 +24,15 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 
-public abstract class GameActivity extends Activity implements Game {
+public abstract class GameActivity<R, V extends View> extends Activity implements Game<R> {
 
     private static final String TAG = GameActivity.class.getName();
 
     private Point screenSize;
 
-    private SurfaceView view;
+    protected V mainView;
+
+    private DebugInfo<R> debugInfo;
 
     private Input input;
 
@@ -42,11 +42,7 @@ public abstract class GameActivity extends Activity implements Game {
 
     private Audio audio;
 
-    private GameScreen screen;
-
-    private GameLoopThread gameThread;
-
-    private DebugRenderer debugRenderer;
+    protected GameScreen<R> screen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,53 +55,15 @@ public abstract class GameActivity extends Activity implements Game {
         screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-        int virtualWidth = getVirtualWidth();
-        int virtualHeight = getVirtualHeight();
+        mainView = prepare();
+        setContentView(mainView);
+        if (debug()) {
+            debugInfo = getDebugInfo();
+        }
 
-        view = new SurfaceView(this);
-        setContentView(view);
-        view.getHolder().setFixedSize(virtualWidth, virtualHeight);
-        view.getHolder().addCallback(new SurfaceHolder.Callback() {
-
-            private boolean creation;
-
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                creation = true;
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                screen.resume();
-                if (creation) {
-                    gameThread = new GameLoopThread(GameActivity.this, holder);
-                    gameThread.start();
-                    creation = false;
-                }
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                gameThread.finish();
-                while (true) {
-                    try {
-                        gameThread.join();
-                        break;
-                    } catch (InterruptedException e) {
-                        // ignore
-                    }
-                }
-                screen.pause();
-
-                if (isFinishing()) {
-                    screen.dispose();
-                }
-            }
-        });
-
-        input = new Input((float) virtualWidth / screenSize.x, (float) virtualHeight / screenSize.y);
-        view.setOnKeyListener(input);
-        view.setOnTouchListener(input);
+        input = new Input((float) getVirtualWidth() / screenSize.x, (float) getVirtualHeight() / screenSize.y);
+        mainView.setOnKeyListener(input);
+        mainView.setOnTouchListener(input);
         SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> accelerometers = manager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         if (!accelerometers.isEmpty()) {
@@ -123,7 +81,7 @@ public abstract class GameActivity extends Activity implements Game {
             }
         });
 
-        graphics = new Graphics(getAssets(), virtualWidth, virtualHeight);
+        graphics = new Graphics(getAssets(), getVirtualWidth(), getVirtualHeight());
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         audio = new Audio(getAssets(), new SoundPool(getMaxSimultaneousSounds(), AudioManager.STREAM_MUSIC, 0));
@@ -133,10 +91,6 @@ public abstract class GameActivity extends Activity implements Game {
         }
         if (screen == null) {
             screen = getFirstScreen(this);
-        }
-
-        if (debug()) {
-            debugRenderer = new DebugRenderer(virtualWidth, virtualHeight);
         }
     }
 
@@ -168,7 +122,7 @@ public abstract class GameActivity extends Activity implements Game {
     }
 
     @Override
-    public void switchToScreen(GameScreen screen) {
+    public void switchToScreen(GameScreen<R> screen) {
         this.screen.pause();
         this.screen.dispose();
 
@@ -182,22 +136,11 @@ public abstract class GameActivity extends Activity implements Game {
     }
 
     @Override
-    public void render(Canvas canvas, float deltaTime) {
-        screen.render(canvas, deltaTime);
-        if (debugRenderer != null) {
-            debugRenderer.render(canvas);
+    public void render(R renderer, float deltaTime) {
+        screen.render(renderer, deltaTime);
+        if (debug()) {
+            debugInfo.render(renderer);
         }
-    }
-
-    protected abstract GameScreen getFirstScreen(Game game);
-
-    protected void saveScreen(GameScreen screen, Bundle state) {
-        // nothing by default
-    }
-
-    // may return null (the default), in which case #getFirstScreen is called
-    protected GameScreen loadScreen(Bundle state) {
-        return null;
     }
 
     protected int getVirtualWidth() {
@@ -214,5 +157,20 @@ public abstract class GameActivity extends Activity implements Game {
 
     protected boolean debug() {
         return true;
+    }
+
+    protected abstract V prepare();
+
+    protected abstract DebugInfo<R> getDebugInfo();
+
+    protected abstract GameScreen<R> getFirstScreen(Game<R> game);
+
+    protected void saveScreen(GameScreen<R> screen, Bundle state) {
+        // nothing by default
+    }
+
+    // may return null (the default), in which case #getFirstScreen is called
+    protected GameScreen<R> loadScreen(Bundle state) {
+        return null;
     }
 }

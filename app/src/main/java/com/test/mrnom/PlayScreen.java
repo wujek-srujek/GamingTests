@@ -15,7 +15,7 @@ import com.test.framework.input.TouchEvent;
 import java.util.List;
 
 
-public class PlayScreen extends GameScreen {
+public class PlayScreen extends GameScreen<Canvas> {
 
     private enum State {
         READY, RUNNING, PAUSED, GAME_OVER
@@ -37,7 +37,7 @@ public class PlayScreen extends GameScreen {
 
     private boolean active;
 
-    protected PlayScreen(Game game) {
+    protected PlayScreen(Game<Canvas> game) {
         super(game);
         world = new World();
         scoreDigits = new int[6];

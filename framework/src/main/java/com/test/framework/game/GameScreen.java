@@ -1,15 +1,14 @@
 package com.test.framework.game;
 
 
-import android.graphics.Canvas;
 import android.os.Bundle;
 
 
-public abstract class GameScreen {
+public abstract class GameScreen<R> {
 
-    protected final Game game;
+    protected final Game<R> game;
 
-    protected GameScreen(Game game) {
+    protected GameScreen(Game<R> game) {
         this.game = game;
     }
 
@@ -27,7 +26,7 @@ public abstract class GameScreen {
 
     protected abstract void update(float deltaTime);
 
-    protected abstract void render(Canvas canvas, float deltaTime);
+    protected abstract void render(R renderer, float deltaTime);
 
     public void saveState(Bundle state) {
         // nothing by defaut

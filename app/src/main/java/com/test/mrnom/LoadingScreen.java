@@ -9,9 +9,9 @@ import com.test.framework.game.GameScreen;
 import com.test.framework.gfx.Graphics;
 
 
-public class LoadingScreen extends GameScreen {
+public class LoadingScreen extends GameScreen<Canvas> {
 
-    protected LoadingScreen(Game game) {
+    protected LoadingScreen(Game<Canvas> game) {
         super(game);
     }
 

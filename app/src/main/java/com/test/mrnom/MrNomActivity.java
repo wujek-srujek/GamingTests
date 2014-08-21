@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.test.framework.game.Game;
-import com.test.framework.game.GameActivity;
+import com.test.framework.game.CanvasGameActivity;
 import com.test.framework.game.GameScreen;
 
 import java.lang.reflect.Constructor;
 
 
-public class MrNomActivity extends GameActivity {
+public class MrNomActivity extends CanvasGameActivity {
 
     private final static String TAG = MrNomActivity.class.getName();
 
