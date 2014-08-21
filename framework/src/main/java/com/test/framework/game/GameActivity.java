@@ -26,15 +26,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 
-public abstract class GameActivity extends Activity implements Game, GameRenderer.FrameRenderer {
+public abstract class GameActivity extends Activity implements Game {
 
     private static final String TAG = GameActivity.class.getName();
 
     private Point screenSize;
 
     private SurfaceView view;
-
-    private GameRenderer gameRenderer;
 
     private Input input;
 
@@ -47,6 +45,8 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
     private GameScreen screen;
 
     private GameLoopThread gameThread;
+
+    private DebugRenderer debugRenderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
         view = new SurfaceView(this);
         setContentView(view);
         view.getHolder().setFixedSize(virtualWidth, virtualHeight);
-        view.getHolder().addCallback(new SurfaceHolder.Callback2() {
+        view.getHolder().addCallback(new SurfaceHolder.Callback() {
 
             private boolean creation;
 
@@ -78,7 +78,7 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 screen.resume();
                 if (creation) {
-                    gameThread = new GameLoopThread(GameActivity.this);
+                    gameThread = new GameLoopThread(GameActivity.this, holder);
                     gameThread.start();
                     creation = false;
                 }
@@ -101,14 +101,7 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
                     screen.dispose();
                 }
             }
-
-            @Override
-            public void surfaceRedrawNeeded(SurfaceHolder holder) {
-                render(0F);
-            }
         });
-
-        gameRenderer = new GameRenderer(this, virtualWidth, virtualHeight, showFps());
 
         input = new Input((float) virtualWidth / screenSize.x, (float) virtualHeight / screenSize.y);
         view.setOnKeyListener(input);
@@ -141,6 +134,10 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
         if (screen == null) {
             screen = getFirstScreen(this);
         }
+
+        if (debug()) {
+            debugRenderer = new DebugRenderer(virtualWidth, virtualHeight);
+        }
     }
 
     @Override
@@ -171,26 +168,6 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
     }
 
     @Override
-    public void update(float deltaTime) {
-        screen.update(deltaTime);
-    }
-
-    @Override
-    public void render(float deltaTime) {
-        Canvas canvas = null;
-        try {
-            canvas = view.getHolder().lockCanvas();
-            if (canvas != null) {
-                gameRenderer.render(canvas, deltaTime);
-            }
-        } finally {
-            if (canvas != null) {
-                view.getHolder().unlockCanvasAndPost(canvas);
-            }
-        }
-    }
-
-    @Override
     public void switchToScreen(GameScreen screen) {
         this.screen.pause();
         this.screen.dispose();
@@ -200,8 +177,16 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
     }
 
     @Override
-    public void renderFrame(Canvas canvas, float deltaTime) {
+    public void update(float deltaTime) {
+        screen.update(deltaTime);
+    }
+
+    @Override
+    public void render(Canvas canvas, float deltaTime) {
         screen.render(canvas, deltaTime);
+        if (debugRenderer != null) {
+            debugRenderer.render(canvas);
+        }
     }
 
     protected abstract GameScreen getFirstScreen(Game game);
@@ -223,11 +208,11 @@ public abstract class GameActivity extends Activity implements Game, GameRendere
         return screenSize.y;
     }
 
-    protected boolean showFps() {
-        return true;
-    }
-
     protected int getMaxSimultaneousSounds() {
         return 10;
+    }
+
+    protected boolean debug() {
+        return true;
     }
 }
